@@ -28,7 +28,6 @@ public class PedidoService {
     @Autowired
     private ProdutoRepository produtoRepository;
 
-    // INSERIR PEDIDO
     public PedidoCompletoDTO inserir(PedidoInsertDTO pddDTO) {
         Cliente cliente = clienteRepository.findById(pddDTO.getClienteId())
                 .orElseThrow(() -> new RuntimeException("Cliente não encontrado"));
@@ -91,7 +90,6 @@ public class PedidoService {
         return toDTO(pedido);
     }
 
-    // CONVERSÃO PARA DTO
     private PedidoCompletoDTO toDTO(Pedido pedido) {
         PedidoCompletoDTO dto = new PedidoCompletoDTO();
         dto.setId(pedido.getId());
