@@ -5,6 +5,7 @@ import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.Set;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Embedded;
 import jakarta.persistence.EmbeddedId;
 import jakarta.persistence.Entity;
@@ -23,14 +24,20 @@ public class Pedido implements Serializable {
 
 	@EmbeddedId
 	private ItemPedidoPK id = new ItemPedidoPK();
-
+	
+	@Column
 	private LocalDate dataPedido;
 
 	@Enumerated(EnumType.STRING)
 	private StatusPedido status;
-
+	
+	@Column
 	private Double valorVenda;
+	
+	@Column
 	private Double desconto;
+	
+	@Column
 	private Integer quantidade;
 
 	@Valid
@@ -40,6 +47,9 @@ public class Pedido implements Serializable {
 	@ManyToOne
 	@JoinColumn(name = "id_cliente")
 	private Cliente cliente;
+	
+	@OneToMany(mappedBy = "id.pedido")
+	private Set<ItemPedido> itens = new HashSet<>();
 
 	// Getters e Setters
 	public ItemPedidoPK getId() {
@@ -105,9 +115,21 @@ public class Pedido implements Serializable {
 	public void setCliente(Cliente cliente) {
 		this.cliente = cliente;
 	}
+
+	public Set<ItemPedido> getItens() {
+		return itens;
+	}
+
+	public void setItens(Set<ItemPedido> itens) {
+		this.itens = itens;
+	}
+
+	public static long getSerialversionuid() {
+		return serialVersionUID;
+	}
 	
-	@OneToMany(mappedBy = "id.pedido")
-	private Set<ItemPedido> itens = new HashSet<>();
+	
+	
 
 }
 

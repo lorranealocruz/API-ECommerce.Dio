@@ -35,7 +35,7 @@ public class PedidoService {
 
         Pedido pedido = new Pedido();
         pedido.setCliente(cliente);
-        pedido.setStatus(StatusPedido.NOVO);
+        pedido.setStatus(StatusPedido.AGUARDANDO_PAGAMENTO);
 
         List<ItemPedido> itens = new ArrayList<>();
 
