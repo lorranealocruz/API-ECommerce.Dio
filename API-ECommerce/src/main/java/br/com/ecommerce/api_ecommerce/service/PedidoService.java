@@ -2,102 +2,103 @@ package br.com.ecommerce.api_ecommerce.service;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import br.com.ecommerce.api_ecommerce.domain.ItemPedido;
+import br.com.ecommerce.api_ecommerce.domain.Pedido;
+import br.com.ecommerce.api_ecommerce.domain.Produto;
+import br.com.ecommerce.api_ecommerce.domain.StatusPedido;
+import br.com.ecommerce.api_ecommerce.dto.PedidoCompletoDTO;
+import br.com.ecommerce.api_ecommerce.entity.Cliente;
+import br.com.ecommerce.api_ecommerce.repository.ClienteRepository;
+import br.com.ecommerce.api_ecommerce.repository.PedidoRepository;
+import br.com.ecommerce.api_ecommerce.service.exceptions.ProdutoSemEstoqueException;
+
 @Service
 public class PedidoService {
-	
-	@Autowired
-	private PedidoRepository pedidoRepository;
-	
-	@Autowired
-	private ClienteRepository clienteRepository;
-	
-	@Autowired
-	private ProdutoRepository produtoRepository;
-	
-	
-	public PedidoCompletoDTO inserir (PedidoInsertDTO pddDTO) {
-		Optional <Cliente> clienteOpt = clienteRepository.findById(pddDTO.getClienteId());
-		if (!clienteOpt.isPresent()) {
-		    throw new RuntimeException("Cliente não encontrado");
-		}
-		
-	Pedido pedido = new Pedido();
-	pedido.setCliente(cliente);
-	pedido.setStatus(StatusPedido.NOVO);
-	
-	List<ItemPedido> itens = new ArrayList();
-	
-	for (ItemInsertDTO itemDTO : pddDTO.getItens()) {
-		Optional <Produto> produtoOpt = produtoRepository.findById(pddDTO.getProdutoId());
-		if (!produtoOpt.isPresent()) {
-		    throw new RuntimeException("Produto não encontrado");
-		}
-		
-		if (produto.getEstoque() < itemDTO.getQuantidade()) {
-            throw new ProdutoSemEstoqueException("Estoque insuficiente para: " + produto.getNome());
+
+    @Autowired
+    private PedidoRepository pedidoRepository;
+
+    @Autowired
+    private ClienteRepository clienteRepository;
+
+    @Autowired
+    private ProdutoRepository produtoRepository;
+
+    // INSERIR PEDIDO
+    public PedidoCompletoDTO inserir(PedidoInsertDTO pddDTO) {
+        Cliente cliente = clienteRepository.findById(pddDTO.getClienteId())
+                .orElseThrow(() -> new RuntimeException("Cliente não encontrado"));
+
+        Pedido pedido = new Pedido();
+        pedido.setCliente(cliente);
+        pedido.setStatus(StatusPedido.NOVO);
+
+        List<ItemPedido> itens = new ArrayList<>();
+
+        for (ItemInsertDTO itemDTO : pddDTO.getItens()) {
+            Produto produto = produtoRepository.findById(itemDTO.getProdutoId())
+                    .orElseThrow(() -> new RuntimeException("Produto não encontrado"));
+
+            if (produto.getEstoque() < itemDTO.getQuantidade()) {
+                throw new ProdutoSemEstoqueException("Estoque insuficiente para: " + produto.getNome());
+            }
+
+            ItemPedido item = new ItemPedido();
+            item.setPedido(pedido);
+            item.setProduto(produto);
+            item.setQuantidade(itemDTO.getQuantidade());
+            item.setValorVenda(produto.getPreco());
+            item.setDesconto(itemDTO.getDesconto());
+
+            itens.add(item);
         }
-		
-		ItemPedido = item = new ItemPedido();
-		item.setPedido(pedido);
-		item.setProduto(produto);
-		item.setQuantidade(ItemDTO.getQuantidade());
-		item.setValorVenda(produto.getPreco());
-		item.setDesconto(itemDTO.getDesconto());
-		
-		item.add(item);
-	}
-	
-	pedido.setItens(itens);
-	pedidoRepository.save(pedido);
-	
-	return toDTO(pedido);
-	
-	}
-	
-	public PedidoCompletoDTO listarPorNumero (Long id) {
-		Optional <Pedido> pedidoOpt = pedidoRepository.findById(pddDTO.getPedidoId());
-		if (!pedidoOpt.isPresent()) {
-		    throw new RuntimeException("Pedido não encontrado");
-		}
-		
-		double total = pedido.getItens().stream()
+
+        pedido.setItens(itens);
+        pedidoRepository.save(pedido);
+
+        return toDTO(pedido);
+    }
+
+    public PedidoCompletoDTO listarPorNumero(Long id) {
+        Pedido pedido = pedidoRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Pedido não encontrado"));
+
+        double total = pedido.getItens().stream()
                 .mapToDouble(i -> (i.getValorVenda() * i.getQuantidade()) - i.getDesconto())
                 .sum();
-		
-		PedidoCompleto pddDTO = ToDTO(pedido);
-		pddDTO.setTotal(total);
-		return pddDTO;
-	}
-	
-	public PedidoCompletoDTO alterarStatus (Long id, String statusStr) {
-		Optional <Pedido> pedidoOpt = pedidoRepository.findById(pddDTO.getPedidoId());
-		if (!pedidoOpt.isPresent()) {
-		    throw new RuntimeException("Pedido não encontrado");
-		}
-		try {
+
+        PedidoCompletoDTO dto = toDTO(pedido);
+        dto.setTotal(total);
+        return dto;
+    }
+
+    public PedidoCompletoDTO alterarStatus(Long id, String statusStr) {
+        Pedido pedido = pedidoRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Pedido não encontrado"));
+
+        try {
             StatusPedido status = StatusPedido.valueOf(statusStr.toUpperCase());
             pedido.setStatus(status);
         } catch (IllegalArgumentException e) {
             throw new IllegalArgumentException("Status inválido: " + statusStr);
         }
-		
+
         pedidoRepository.save(pedido);
         return toDTO(pedido);
-        
-	}
-	
-	private PedidoCompletoDTO toDTO(Pedido pedido) {
+    }
+
+    // CONVERSÃO PARA DTO
+    private PedidoCompletoDTO toDTO(Pedido pedido) {
         PedidoCompletoDTO dto = new PedidoCompletoDTO();
-        pdddto.setId(pedido.getId());
-        pdddto.setClienteNome(pedido.getCliente().getNome());
-        pdddto.setDataPedido(pedido.getDataPedido());
-        pdddto.setStatus(pedido.getStatus());
-        
+        dto.setId(pedido.getId());
+        dto.setClienteNome(pedido.getCliente().getNome());
+        dto.setDataPedido(pedido.getDataPedido());
+        dto.setStatus(pedido.getStatus());
+
         List<ItemPedidoDTO> itensDTO = pedido.getItens().stream().map(i -> {
             ItemPedidoDTO itemDTO = new ItemPedidoDTO();
             itemDTO.setNomeProduto(i.getProduto().getNome());
@@ -111,5 +112,5 @@ public class PedidoService {
         dto.setItens(itensDTO);
         return dto;
     }
-	
 }
+

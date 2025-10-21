@@ -3,6 +3,8 @@ package br.com.ecommerce.api_ecommerce.dto;
 import java.time.LocalDateTime;
 import java.util.List;
 
+import br.com.ecommerce.api_ecommerce.domain.StatusPedido;
+
 public class PedidoCompletoDTO {
 
 	private Long id;
