@@ -106,7 +106,7 @@ public class Pedido implements Serializable {
 		this.cliente = cliente;
 	}
 	
-	@OneToMany(mappedBy = "id_pedido")
+	@OneToMany(mappedBy = "id.pedido")
 	private Set<ItemPedido> itens = new HashSet<>();
 
 }
