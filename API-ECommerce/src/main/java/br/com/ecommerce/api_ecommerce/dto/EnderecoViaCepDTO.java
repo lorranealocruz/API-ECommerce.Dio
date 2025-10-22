@@ -16,6 +16,17 @@ public class EnderecoViaCepDTO {
     @JsonProperty("uf")
     private String uf;
 
+    @JsonProperty("Cep")
+    private String Cep;
+
+    public String getCep() {
+        return Cep;
+    }
+
+    public void setCep(String cep) {
+        Cep = cep;
+    }
+
     private boolean erro;
 
     public String getLogradouro() {
