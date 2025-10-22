@@ -10,10 +10,14 @@ import br.com.ecommerce.api_ecommerce.domain.ItemPedido;
 import br.com.ecommerce.api_ecommerce.domain.Pedido;
 import br.com.ecommerce.api_ecommerce.domain.Produto;
 import br.com.ecommerce.api_ecommerce.domain.StatusPedido;
+import br.com.ecommerce.api_ecommerce.dto.ItemInsertDTO;
+import br.com.ecommerce.api_ecommerce.dto.ItemPedidoDTO;
 import br.com.ecommerce.api_ecommerce.dto.PedidoCompletoDTO;
+import br.com.ecommerce.api_ecommerce.dto.PedidoInsertDTO;
 import br.com.ecommerce.api_ecommerce.entity.Cliente;
 import br.com.ecommerce.api_ecommerce.repository.ClienteRepository;
 import br.com.ecommerce.api_ecommerce.repository.PedidoRepository;
+import br.com.ecommerce.api_ecommerce.repository.ProdutoRepository;
 import br.com.ecommerce.api_ecommerce.service.exceptions.ProdutoSemEstoqueException;
 
 @Service
