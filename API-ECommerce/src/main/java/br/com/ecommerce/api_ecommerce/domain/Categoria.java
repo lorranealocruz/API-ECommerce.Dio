@@ -1,25 +1,35 @@
 package br.com.ecommerce.api_ecommerce.domain;
 
+import java.io.Serializable;
+import java.util.HashSet;
+import java.util.Set;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 
 @Entity
-@Table (name = "categoria")
-public class Categoria {
-	
+@Table(name = "categoria")
+public class Categoria implements Serializable {
+
+	private static final long serialVersionUID = 1L;
+
 	@Id
-	@GeneratedValue (strategy = GenerationType.IDENTITY)
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
-	
-	@Column (nullable = false, unique = true)
+
+	@Column(nullable = false, unique = true)
 	private String nome;
-	
+
 	@Column
 	private String descricao;
+
+	@OneToMany(mappedBy = "categoria")
+	private Set<Produto> produtos = new HashSet<>();
 
 	public Long getId() {
 		return id;
@@ -44,6 +54,13 @@ public class Categoria {
 	public void setDescricao(String descricao) {
 		this.descricao = descricao;
 	}
-	
-	
+
+	public Set<Produto> getProdutos() {
+		return produtos;
+	}
+
+	public void setProdutos(Set<Produto> produtos) {
+		this.produtos = produtos;
+	}
+
 }
