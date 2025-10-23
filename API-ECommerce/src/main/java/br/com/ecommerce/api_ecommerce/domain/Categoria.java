@@ -4,6 +4,8 @@ import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -29,6 +31,7 @@ public class Categoria implements Serializable {
 	private String descricao;
 
 	@OneToMany(mappedBy = "categoria")
+	@JsonManagedReference
 	private Set<Produto> produtos = new HashSet<>();
 
 	public Long getId() {

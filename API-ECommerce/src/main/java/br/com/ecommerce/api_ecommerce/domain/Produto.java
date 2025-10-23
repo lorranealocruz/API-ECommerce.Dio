@@ -4,6 +4,8 @@ import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -35,6 +37,7 @@ public class Produto implements Serializable {
 
 	@ManyToOne
 	@JoinColumn(name = "categoria_id", nullable = false)
+	@JsonBackReference
 	private Categoria categoria;
 
 	@OneToMany(mappedBy = "id.produto")
