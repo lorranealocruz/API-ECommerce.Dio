@@ -28,6 +28,7 @@ public class ProdutoController {
 		Produto produto = new Produto();
 		produto.setNome(dto.getNome());
 		produto.setDescricao(dto.getDescricao());
+		produto.setEstoque(dto.getEstoque());
 		produto.setPreco(dto.getPreco());
 		return ResponseEntity.ok(produtoService.inserir(produto, dto.getCategoriaId()));
 	}
