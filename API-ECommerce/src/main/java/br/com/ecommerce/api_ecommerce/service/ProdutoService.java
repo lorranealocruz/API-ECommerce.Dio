@@ -33,7 +33,7 @@ public class ProdutoService {
 
 
 	public Produto atualizar(Long id, Produto produto, Long categoriaId) {
-		Produto p = produtoRepository.findById(id).orElseThrow(() -> new RuntimeException("Produto não encontrada"));
+		Produto p = produtoRepository.findById(id).orElseThrow(() -> new RuntimeException("Produto não encontrado"));
 		Categoria categoria = categoriaRepository.findById(categoriaId)
 				.orElseThrow(() -> new RuntimeException("Categoria não encontrada"));
 
