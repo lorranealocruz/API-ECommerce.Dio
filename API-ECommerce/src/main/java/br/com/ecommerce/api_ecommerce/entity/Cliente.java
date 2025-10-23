@@ -2,6 +2,7 @@ package br.com.ecommerce.api_ecommerce.entity;
 
 import br.com.ecommerce.api_ecommerce.dto.ClienteInsertDTO;
 import jakarta.persistence.*;
+import jakarta.validation.Valid;
 import jakarta.validation.constraints.Email;
 import org.hibernate.validator.constraints.br.CPF;
 
@@ -14,6 +15,7 @@ public class Cliente {
     private Long id;
 
     private String nome;
+    
     private String telefone;
 
     @Email
@@ -22,10 +24,21 @@ public class Cliente {
     @CPF
     private String cpf;
 
-    // Construtor padrão (obrigatório pelo JPA)
+    @Valid
+    @Embedded
+    private Endereco endereco;
+        
+    public Endereco getEndereco() {
+    	return endereco;
+    }
+    
+    public void setEndereco(Endereco endereco) {
+    	this.endereco = endereco;
+    }
+ 
     public Cliente() {}
 
-    // Construtor usado no service
+
     public Cliente(ClienteInsertDTO dto) {
         this.nome = dto.getNome();
         this.telefone = dto.getTelefone();
@@ -33,7 +46,7 @@ public class Cliente {
         this.cpf = dto.getCpf();
     }
 
-    // Getters e Setters
+
     public Long getId() {
         return id;
     }
