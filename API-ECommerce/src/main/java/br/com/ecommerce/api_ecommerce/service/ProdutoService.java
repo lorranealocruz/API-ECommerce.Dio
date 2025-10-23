@@ -18,7 +18,7 @@ public class ProdutoService {
 	@Autowired
 	private CategoriaRepository categoriaRepository;
 
-	// criar produto
+
 	public Produto inserir(Produto produto, Long categoriaId) {
 		Categoria categoria = categoriaRepository.findById(categoriaId)
 				.orElseThrow(() -> new RuntimeException("Categoria não encontrada!"));
@@ -26,12 +26,12 @@ public class ProdutoService {
 		return produtoRepository.save(produto);
 	}
 
-	// listar
+
 	public List<Produto> listar() {
 		return produtoRepository.findAll();
 	}
 
-	// atualizar produto
+
 	public Produto atualizar(Long id, Produto produto, Long categoriaId) {
 		Produto p = produtoRepository.findById(id).orElseThrow(() -> new RuntimeException("Produto não encontrada"));
 		Categoria categoria = categoriaRepository.findById(categoriaId)
