@@ -1,15 +1,20 @@
 package br.com.ecommerce.api_ecommerce.dto;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 import java.util.List;
 
 import br.com.ecommerce.api_ecommerce.domain.StatusPedido;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
 
 public class PedidoCompletoDTO {
 
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
     private String clienteNome;
-    private LocalDateTime dataPedido;
+    private LocalDate dataPedido;
     private StatusPedido status;
     private List<ItemPedidoDTO> itens;
     private Double total;
@@ -17,7 +22,7 @@ public class PedidoCompletoDTO {
     public PedidoCompletoDTO() {}
 
 
-	public PedidoCompletoDTO(Long id, String clienteNome, LocalDateTime dataPedido, StatusPedido status,
+	public PedidoCompletoDTO(Long id, String clienteNome, LocalDate dataPedido, StatusPedido status,
 			List<ItemPedidoDTO> itens, Double total) {
 		super();
 		this.id = id;
@@ -49,12 +54,12 @@ public class PedidoCompletoDTO {
 	}
 
 
-	public LocalDateTime getDataPedido() {
+	public LocalDate getDataPedido() {
 		return dataPedido;
 	}
 
 
-	public void setDataPedido(LocalDateTime dataPedido) {
+	public void setDataPedido(LocalDate dataPedido) {
 		this.dataPedido = dataPedido;
 	}
 

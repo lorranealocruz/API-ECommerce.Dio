@@ -1,19 +1,25 @@
 package br.com.ecommerce.api_ecommerce.service;
 
-import java.util.ArrayList;
+
+import java.util.HashSet;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import br.com.ecommerce.api_ecommerce.domain.ItemPedido;
 import br.com.ecommerce.api_ecommerce.domain.Pedido;
 import br.com.ecommerce.api_ecommerce.domain.Produto;
 import br.com.ecommerce.api_ecommerce.domain.StatusPedido;
+import br.com.ecommerce.api_ecommerce.dto.ItemInsertDTO;
+import br.com.ecommerce.api_ecommerce.dto.ItemPedidoDTO;
 import br.com.ecommerce.api_ecommerce.dto.PedidoCompletoDTO;
+import br.com.ecommerce.api_ecommerce.dto.PedidoInsertDTO;
 import br.com.ecommerce.api_ecommerce.entity.Cliente;
 import br.com.ecommerce.api_ecommerce.repository.ClienteRepository;
 import br.com.ecommerce.api_ecommerce.repository.PedidoRepository;
+import br.com.ecommerce.api_ecommerce.repository.ProdutoRepository;
 import br.com.ecommerce.api_ecommerce.service.exceptions.ProdutoSemEstoqueException;
 
 @Service
@@ -28,6 +34,7 @@ public class PedidoService {
     @Autowired
     private ProdutoRepository produtoRepository;
 
+    @Transactional
     public PedidoCompletoDTO inserir(PedidoInsertDTO pddDTO) {
         Cliente cliente = clienteRepository.findById(pddDTO.getClienteId())
                 .orElseThrow(() -> new RuntimeException("Cliente não encontrado"));
@@ -36,24 +43,29 @@ public class PedidoService {
         pedido.setCliente(cliente);
         pedido.setStatus(StatusPedido.AGUARDANDO_PAGAMENTO);
 
-        List<ItemPedido> itens = new ArrayList<>();
+        HashSet<ItemPedido> itens = new HashSet<ItemPedido>();
 
         for (ItemInsertDTO itemDTO : pddDTO.getItens()) {
-            Produto produto = produtoRepository.findById(itemDTO.getProdutoId())
+            Produto produto = produtoRepository.findById(itemDTO.getProduto().getId())
                     .orElseThrow(() -> new RuntimeException("Produto não encontrado"));
 
             if (produto.getEstoque() < itemDTO.getQuantidade()) {
                 throw new ProdutoSemEstoqueException("Estoque insuficiente para: " + produto.getNome());
             }
 
-            ItemPedido item = new ItemPedido();
-            item.setPedido(pedido);
-            item.setProduto(produto);
-            item.setQuantidade(itemDTO.getQuantidade());
-            item.setValorVenda(produto.getPreco());
-            item.setDesconto(itemDTO.getDesconto());
+            ItemPedido item = new ItemPedido(
+                pedido,                          
+                produto,                           
+                produto.getPreco(),                 
+                itemDTO.getDesconto(),             
+                itemDTO.getQuantidade()
+            );
 
             itens.add(item);
+
+
+            produto.setEstoque(produto.getEstoque() - itemDTO.getQuantidade());
+            produtoRepository.save(produto);
         }
 
         pedido.setItens(itens);
