@@ -22,6 +22,18 @@ public class ClienteInsertDTO {
     @CPF(message = "CPF inválido.")
     private String cpf;
 
+    @NotBlank
+    @Pattern(regexp = "\\d{8}", message = "O CEP deve conter 8 dígitos, sem traço")
+    private String cep;
+
+    public String getCep() {
+        return cep;
+    }
+
+    public void setCep(String cep) {
+        this.cep = cep;
+    }
+
     // Getters e Setters
     public String getNome() {
         return nome;
