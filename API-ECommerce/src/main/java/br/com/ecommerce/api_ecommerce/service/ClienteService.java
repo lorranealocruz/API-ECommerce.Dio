@@ -9,9 +9,15 @@ import org.springframework.stereotype.Service;
 import br.com.ecommerce.api_ecommerce.dto.ClienteInsertDTO;
 import br.com.ecommerce.api_ecommerce.dto.ClienteResponseDTO;
 import br.com.ecommerce.api_ecommerce.entity.Cliente;
+import br.com.ecommerce.api_ecommerce.entity.Endereco;
 import br.com.ecommerce.api_ecommerce.repository.ClienteRepository;
 import br.com.ecommerce.api_ecommerce.exception.CpfJaCadastradoException;
 import br.com.ecommerce.api_ecommerce.exception.EmailJaCadastradoException;
+import br.com.ecommerce.api_ecommerce.service.ViaCepService;
+import br.com.ecommerce.api_ecommerce.service.EmailService;
+import br.com.ecommerce.api_ecommerce.dto.EnderecoViaCepDTO;
+
+import br.com.ecommerce.api_ecommerce.service.exceptions.CepNaoEncontradoException; 
 
 @Service
 public class ClienteService {
@@ -19,7 +25,12 @@ public class ClienteService {
     @Autowired
     private ClienteRepository repository;
 
-    // Criar cliente
+    @Autowired
+    private ViaCepService viaCepService;
+
+    @Autowired
+    private EmailService emailService;
+
     public ClienteResponseDTO inserir(ClienteInsertDTO dto) {
         if (repository.existsByCpf(dto.getCpf())) {
             throw new CpfJaCadastradoException("CPF já cadastrado!");
@@ -30,12 +41,30 @@ public class ClienteService {
         }
 
         Cliente cliente = new Cliente(dto);
+
+        try {
+            EnderecoViaCepDTO enderecoDTO = viaCepService.consultarCep(dto.getCep());
+            
+            Endereco endereco = new Endereco(); 
+            endereco.setLogradouro(enderecoDTO.getLogradouro());
+            endereco.setBairro(enderecoDTO.getBairro());
+            endereco.setLocalidade(enderecoDTO.getLocalidade());
+            endereco.setUf(enderecoDTO.getUf());
+            endereco.setCep(dto.getCep()); 
+            
+            cliente.setEndereco(endereco); 
+            
+        } catch (CepNaoEncontradoException e) {
+            throw new CepNaoEncontradoException("CEP não encontrado: " + dto.getCep());
+        }
+
         repository.save(cliente);
+        
+        emailService.enviarEmailDeConfirmacao(cliente.getEmail(), cliente.getNome());
 
         return new ClienteResponseDTO(cliente);
     }
 
-    // Listar clientes
     public List<ClienteResponseDTO> listar() {
         List<Cliente> clientes = repository.findAll();
         return clientes.stream()
@@ -43,12 +72,10 @@ public class ClienteService {
                 .collect(Collectors.toList());
     }
 
-    // Atualizar cliente
     public ClienteResponseDTO atualizar(Long id, ClienteInsertDTO dto) {
         Cliente cliente = repository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Cliente não encontrado"));
 
-        // Validar CPF e email diferentes do próprio cliente
         if (!cliente.getCpf().equals(dto.getCpf()) && repository.existsByCpf(dto.getCpf())) {
             throw new CpfJaCadastradoException("CPF já cadastrado!");
         }
@@ -62,12 +89,33 @@ public class ClienteService {
         cliente.setTelefone(dto.getTelefone());
         cliente.setEmail(dto.getEmail());
 
+        try {
+            EnderecoViaCepDTO enderecoDTO = viaCepService.consultarCep(dto.getCep());
+            
+            Endereco endereco = cliente.getEndereco(); 
+            if (endereco == null) {
+                endereco = new Endereco(); 
+            }
+            
+            endereco.setLogradouro(enderecoDTO.getLogradouro());
+            endereco.setBairro(enderecoDTO.getBairro());
+            endereco.setLocalidade(enderecoDTO.getLocalidade());
+            endereco.setUf(enderecoDTO.getUf());
+            endereco.setCep(dto.getCep()); 
+            
+            cliente.setEndereco(endereco); 
+            
+        } catch (CepNaoEncontradoException e) {
+            throw new CepNaoEncontradoException("CEP não encontrado: " + dto.getCep());
+        }
+        
         repository.save(cliente);
+        
+        emailService.enviarEmailDeConfirmacao(cliente.getEmail(), cliente.getNome());
 
         return new ClienteResponseDTO(cliente);
     }
 
-    // Deletar cliente
     public void deletar(Long id) {
         Cliente cliente = repository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Cliente não encontrado"));
