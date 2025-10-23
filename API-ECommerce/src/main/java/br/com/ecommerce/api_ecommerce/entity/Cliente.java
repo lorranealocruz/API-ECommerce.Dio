@@ -2,7 +2,6 @@ package br.com.ecommerce.api_ecommerce.entity;
 
 import br.com.ecommerce.api_ecommerce.dto.ClienteInsertDTO;
 import jakarta.persistence.*;
-import jakarta.validation.Valid;
 import jakarta.validation.constraints.Email;
 import org.hibernate.validator.constraints.br.CPF;
 
@@ -15,7 +14,6 @@ public class Cliente {
     private Long id;
 
     private String nome;
-    
     private String telefone;
 
     @Email
@@ -24,27 +22,9 @@ public class Cliente {
     @CPF
     private String cpf;
 
-<<<<<<< HEAD
-    @Valid
-    @Embedded
-    private Endereco endereco;
-        
-    public Endereco getEndereco() {
-    	return endereco;
-    }
-    
-    public void setEndereco(Endereco endereco) {
-    	this.endereco = endereco;
-    }
- 
-    public Cliente() {}
-
-
-=======
 
     public Cliente() {}
 
->>>>>>> origin/main
     public Cliente(ClienteInsertDTO dto) {
         this.nome = dto.getNome();
         this.telefone = dto.getTelefone();
@@ -92,4 +72,14 @@ public class Cliente {
     public void setCpf(String cpf) {
         this.cpf = cpf;
     }
+
+	public void setEndereco(Endereco endereco) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	public Endereco getEndereco() {
+		// TODO Auto-generated method stub
+		return null;
+	}
 }
