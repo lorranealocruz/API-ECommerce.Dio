@@ -4,9 +4,14 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 import br.com.ecommerce.api_ecommerce.domain.StatusPedido;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
 
 public class PedidoCompletoDTO {
 
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
     private String clienteNome;
     private LocalDateTime dataPedido;

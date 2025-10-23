@@ -18,7 +18,6 @@ public class ItemPedido implements Serializable {
 	private Double desconto;
 	private Integer quantidade;
 
-	// Construtores
 	public ItemPedido() {
 	}
 
@@ -76,5 +75,5 @@ public class ItemPedido implements Serializable {
 	public Double getSubTotal() {
 		return (valorVenda - desconto) * quantidade;
 	}
-}
 
+}
