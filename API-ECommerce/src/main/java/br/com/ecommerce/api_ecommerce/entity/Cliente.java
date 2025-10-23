@@ -36,7 +36,7 @@ public class Cliente {
         this.endereco = endereco;
     }
 
-    // Construtor padrão (obrigatório pelo JPA)
+
     public Cliente() {}
 
     public Cliente(ClienteInsertDTO dto) {
