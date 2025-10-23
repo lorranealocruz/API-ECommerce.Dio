@@ -5,58 +5,56 @@ import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.Set;
 
+import br.com.ecommerce.api_ecommerce.entity.Cliente;
 import jakarta.persistence.Column;
-import jakarta.persistence.Embedded;
-import jakarta.persistence.EmbeddedId;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
-import jakarta.validation.Valid;
 
 @Entity
 @Table(name = "pedido")
 public class Pedido implements Serializable {
 	private static final long serialVersionUID = 1L;
 
-	@EmbeddedId
-	private ItemPedidoPK id = new ItemPedidoPK();
-	
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Long id;
+
 	@Column
 	private LocalDate dataPedido;
 
 	@Enumerated(EnumType.STRING)
 	private StatusPedido status;
-	
+
 	@Column
 	private Double valorVenda;
-	
+
 	@Column
 	private Double desconto;
-	
+
 	@Column
 	private Integer quantidade;
 
-	@Valid
-	@Embedded
-	private Categoria categoria;
-
 	@ManyToOne
-	@JoinColumn(name = "id_cliente")
+	@JoinColumn(name = "id_cliente", nullable = false)
 	private Cliente cliente;
-	
+
 	@OneToMany(mappedBy = "id.pedido")
 	private Set<ItemPedido> itens = new HashSet<>();
 
 	// Getters e Setters
-	public ItemPedidoPK getId() {
+	public Long getId() {
 		return id;
 	}
 
-	public void setId(ItemPedidoPK id) {
+	public void setId(Long id) {
 		this.id = id;
 	}
 
@@ -100,14 +98,6 @@ public class Pedido implements Serializable {
 		this.quantidade = quantidade;
 	}
 
-	public Categoria getCategoria() {
-		return categoria;
-	}
-
-	public void setCategoria(Categoria categoria) {
-		this.categoria = categoria;
-	}
-
 	public Cliente getCliente() {
 		return cliente;
 	}
@@ -127,9 +117,5 @@ public class Pedido implements Serializable {
 	public static long getSerialversionuid() {
 		return serialVersionUID;
 	}
-	
-	
-	
 
 }
-

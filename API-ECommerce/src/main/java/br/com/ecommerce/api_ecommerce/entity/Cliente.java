@@ -39,7 +39,6 @@ public class Cliente {
     // Construtor padrão (obrigatório pelo JPA)
     public Cliente() {}
 
-    // Construtor usado no service
     public Cliente(ClienteInsertDTO dto) {
         this.nome = dto.getNome();
         this.telefone = dto.getTelefone();
@@ -47,7 +46,7 @@ public class Cliente {
         this.cpf = dto.getCpf();
     }
 
-    // Getters e Setters
+
     public Long getId() {
         return id;
     }
