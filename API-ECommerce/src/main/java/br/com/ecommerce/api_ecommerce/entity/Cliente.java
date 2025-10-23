@@ -1,4 +1,4 @@
-package br.com.ecommerce.api_ecommerce.entity;
+package br.com.ecommerce.api_ecommerce.entity;	
 
 import br.com.ecommerce.api_ecommerce.dto.ClienteInsertDTO;
 import jakarta.persistence.*;
@@ -25,6 +25,16 @@ public class Cliente {
     public Cliente() {
     }
 
+<<<<<<< HEAD
+=======
+    public void setEndereco(Endereco endereco) {
+        this.endereco = endereco;
+    }
+
+
+    public Cliente() {}
+
+>>>>>>> af288ee17253a8a7697a603cd86266653b7dcde8
     public Cliente(ClienteInsertDTO dto) {
         this.nome = dto.getNome();
         this.telefone = dto.getTelefone();
