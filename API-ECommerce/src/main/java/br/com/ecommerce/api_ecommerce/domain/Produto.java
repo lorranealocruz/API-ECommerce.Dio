@@ -34,6 +34,9 @@ public class Produto implements Serializable {
 
 	@Column(nullable = false)
 	private Double preco;
+	
+	@Column(nullable = false)
+	private Integer estoque; 
 
 	@ManyToOne
 	@JoinColumn(name = "categoria_id", nullable = false)
@@ -73,6 +76,14 @@ public class Produto implements Serializable {
 
 	public void setPreco(Double preco) {
 		this.preco = preco;
+	}
+	
+	public void setEstoque(Integer estoque) {
+		this.estoque = estoque;
+	}
+	
+	public Integer getEstoque() {
+		return estoque;
 	}
 
 	public Categoria getCategoria() {

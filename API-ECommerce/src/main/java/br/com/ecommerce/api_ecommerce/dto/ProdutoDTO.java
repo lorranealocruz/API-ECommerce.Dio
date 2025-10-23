@@ -6,22 +6,24 @@ public class ProdutoDTO {
 	private String nome;
 	private String descricao;
 	private Double preco;
+	private Integer estoque;
 	private Long categoriaId;
 	private String categoriaNome;
 
-	public ProdutoDTO(Long id, String nome, String descricao, Double preco, Long categoriaId, String categoriaNome) {
+	public ProdutoDTO(Long id, String nome, String descricao, Double preco, Integer estoque, Long categoriaId, String categoriaNome) {
 		super();
 		this.id = id;
 		this.nome = nome;
 		this.descricao = descricao;
 		this.preco = preco;
+		this.estoque = estoque;
 		this.categoriaId = categoriaId;
 		this.categoriaNome = categoriaNome;
 	}
 
 	public ProdutoDTO() {
 		super();
-		// TODO Auto-generated constructor stub
+
 	}
 
 	public Long getId() {
@@ -54,6 +56,14 @@ public class ProdutoDTO {
 
 	public void setPreco(Double preco) {
 		this.preco = preco;
+	}
+	
+	public void setEstoque(Integer estoque) {
+		this.estoque = estoque;
+	}
+	
+	public Integer getEstoque() {
+		return estoque;
 	}
 
 	public Long getCategoriaId() {

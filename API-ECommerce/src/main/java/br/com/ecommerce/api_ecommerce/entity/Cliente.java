@@ -24,6 +24,7 @@ public class Cliente {
     @CPF
     private String cpf;
 
+<<<<<<< HEAD
     @Valid
     @Embedded
     private Endereco endereco;
@@ -39,6 +40,11 @@ public class Cliente {
     public Cliente() {}
 
 
+=======
+
+    public Cliente() {}
+
+>>>>>>> origin/main
     public Cliente(ClienteInsertDTO dto) {
         this.nome = dto.getNome();
         this.telefone = dto.getTelefone();
