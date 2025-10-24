@@ -1,9 +1,12 @@
 package br.com.ecommerce.api_ecommerce.dto;
 
-public class CategoriaDTO {
+import jakarta.validation.constraints.NotBlank;
 
+public class CategoriaDTO {
 	private Long id;
+	@NotBlank(message = "O nome é obrigatório!")
 	private String nome;
+
 	private String descricao;
 
 	public CategoriaDTO(Long id, String nome, String descricao) {
@@ -41,7 +44,5 @@ public class CategoriaDTO {
 	public void setDescricao(String descricao) {
 		this.descricao = descricao;
 	}
-	
-	
-	
+
 }

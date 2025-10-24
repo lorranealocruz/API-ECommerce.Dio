@@ -1,12 +1,19 @@
 package br.com.ecommerce.api_ecommerce.dto;
 
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+
 public class ProdutoDTO {
 
 	private Long id;
+	@NotBlank (message = "Preencha o nome do produto!")
 	private String nome;
 	private String descricao;
+	@NotNull (message = "Preencha o preço do produto!")
 	private Double preco;
+	@NotNull (message = "Preencha a quantidade de estoque do produto!")
 	private Integer estoque;
+	@NotNull (message = "A categria é obrigatória!")
 	private Long categoriaId;
 	private String categoriaNome;
 
