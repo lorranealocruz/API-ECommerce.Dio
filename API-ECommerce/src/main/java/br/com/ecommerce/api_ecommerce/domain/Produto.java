@@ -15,6 +15,8 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 
 @Entity
 @Table(name = "produto")
@@ -25,22 +27,26 @@ public class Produto implements Serializable {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
-
+	
 	@Column(nullable = false)
+	@NotBlank
 	private String nome;
 
 	@Column
 	private String descricao;
 
 	@Column(nullable = false)
+	@NotNull
 	private Double preco;
 	
 	@Column(nullable = false)
+	@NotNull
 	private Integer estoque; 
 
 	@ManyToOne
 	@JoinColumn(name = "categoria_id", nullable = false)
 	@JsonBackReference
+	@NotNull
 	private Categoria categoria;
 
 	@OneToMany(mappedBy = "id.produto")
