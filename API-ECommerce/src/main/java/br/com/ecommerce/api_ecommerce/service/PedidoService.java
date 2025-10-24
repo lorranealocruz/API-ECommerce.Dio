@@ -1,8 +1,10 @@
 package br.com.ecommerce.api_ecommerce.service;
 
 
+import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -34,6 +36,24 @@ public class PedidoService {
     @Autowired
     private ProdutoRepository produtoRepository;
 
+
+    public List<PedidoCompletoDTO> listarTodos () {
+    	List<Pedido> pedidos = pedidoRepository.findAll();
+    	
+    	return pedidos.stream()
+                .map(p -> {
+                    PedidoCompletoDTO dto = toDTO(p);
+
+                    double total = p.getItens().stream()
+                            .mapToDouble(i -> (i.getValorVenda() * i.getQuantidade()) - i.getDesconto())
+                            .sum();
+                    dto.setTotal(total);
+
+                    return dto;
+                })
+                .collect(Collectors.toList());
+    }
+    
     @Transactional
     public PedidoCompletoDTO inserir(PedidoInsertDTO pddDTO) {
         Cliente cliente = clienteRepository.findById(pddDTO.getClienteId())
@@ -67,8 +87,20 @@ public class PedidoService {
             produto.setEstoque(produto.getEstoque() - itemDTO.getQuantidade());
             produtoRepository.save(produto);
         }
+        
+        Double total = itens.stream()
+        	    .mapToDouble(i -> (i.getValorVenda() * i.getQuantidade()) - i.getDesconto())
+        	    .sum();
+
+        	pedido.setItens(itens);
+        	pedido.setDataPedido(LocalDate.now());
+        	pedido.setValorTotal(total);
+        	pedidoRepository.save(pedido);
+
 
         pedido.setItens(itens);
+        pedido.setDataPedido(LocalDate.now());
+        pedido.setValorVenda(total);
         pedidoRepository.save(pedido);
 
         return toDTO(pedido);
@@ -98,6 +130,7 @@ public class PedidoService {
             throw new IllegalArgumentException("Status inválido: " + statusStr);
         }
 
+        pedido.setDataPedido(LocalDate.now());
         pedidoRepository.save(pedido);
         return toDTO(pedido);
     }
@@ -120,7 +153,21 @@ public class PedidoService {
         }).toList();
 
         dto.setItens(itensDTO);
+
+     
+        double total = pedido.getValorTotal() != null ? pedido.getValorTotal()
+            : itensDTO.stream().mapToDouble(ItemPedidoDTO::getSubtotal).sum();
+        dto.setTotal(total);
+
         return dto;
     }
+    
+    public void deletar(Long id) {
+        Pedido pedido = pedidoRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Pedido não encontrado"));
+        
+        pedidoRepository.delete(pedido);
+    }
+
 }
 

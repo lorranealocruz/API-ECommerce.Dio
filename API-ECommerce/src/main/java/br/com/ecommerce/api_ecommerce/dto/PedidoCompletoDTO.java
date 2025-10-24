@@ -17,20 +17,20 @@ public class PedidoCompletoDTO {
     private LocalDate dataPedido;
     private StatusPedido status;
     private List<ItemPedidoDTO> itens;
-    private Double total;
+    private Double Valortotal;
     
     public PedidoCompletoDTO() {}
 
 
 	public PedidoCompletoDTO(Long id, String clienteNome, LocalDate dataPedido, StatusPedido status,
-			List<ItemPedidoDTO> itens, Double total) {
+			List<ItemPedidoDTO> itens, Double Valortotal) {
 		super();
 		this.id = id;
 		this.clienteNome = clienteNome;
 		this.dataPedido = dataPedido;
 		this.status = status;
 		this.itens = itens;
-		this.total = total;
+		this.Valortotal = Valortotal;
 	}
 
 
@@ -85,11 +85,11 @@ public class PedidoCompletoDTO {
 
 
 	public Double getTotal() {
-		return total;
+		return Valortotal;
 	}
 
 
-	public void setTotal(Double total) {
-		this.total = total;
+	public void setTotal(Double Valortotal) {
+		this.Valortotal = Valortotal;
 	}
 }
