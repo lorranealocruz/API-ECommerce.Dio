@@ -11,6 +11,7 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
+import br.com.ecommerce.api_ecommerce.service.exceptions.CepNaoEncontradoException;
 import br.com.ecommerce.api_ecommerce.service.exceptions.DatabaseException;
 import br.com.ecommerce.api_ecommerce.service.exceptions.ResourceNotFoundException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -87,5 +88,18 @@ public class ResourceExceptionHandler {
         err.setMessage("O corpo da requisição contém valores inválidos ou mal formatados. Verifique os valores de Enums.");
         err.setPath(request.getRequestURI());
         return ResponseEntity.status(status).body(err);
-    }  
+    }
+    
+    @ExceptionHandler(CepNaoEncontradoException.class)
+    public ResponseEntity<StandardError> cepNaoEncontrado(CepNaoEncontradoException e, HttpServletRequest request) {
+        String error = "CEP Inválido ou Não Encontrado";
+        HttpStatus status = HttpStatus.BAD_REQUEST; 
+        StandardError err = new StandardError(); 
+        err.setTimestamp(Instant.now());
+        err.setStatus(status.value());
+        err.setError(error);
+        err.setMessage(e.getMessage()); 
+        err.setPath(request.getRequestURI());
+        return ResponseEntity.status(status).body(err);
+    }
 }

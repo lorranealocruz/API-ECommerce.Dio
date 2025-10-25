@@ -40,16 +40,22 @@ public class ClienteService {
         Cliente cliente = new Cliente(dto);
 
         try {
-            EnderecoViaCepDTO enderecoDTO = viaCepService.consultarCep(dto.getCep());
+            String cep = dto.getCep();
+
+            if (cep != null && !cep.isBlank()) {
+                EnderecoViaCepDTO enderecoDTO = viaCepService.consultarCep(cep);
             
-            Endereco endereco = new Endereco(); 
-            endereco.setLogradouro(enderecoDTO.getLogradouro());
-            endereco.setBairro(enderecoDTO.getBairro());
-            endereco.setLocalidade(enderecoDTO.getLocalidade());
-            endereco.setUf(enderecoDTO.getUf());
-            endereco.setCep(dto.getCep()); 
+                Endereco endereco = new Endereco(); 
+                endereco.setLogradouro(enderecoDTO.getLogradouro());
+                endereco.setBairro(enderecoDTO.getBairro());
+                endereco.setLocalidade(enderecoDTO.getLocalidade());
+                endereco.setUf(enderecoDTO.getUf());
+                endereco.setCep(cep); 
             
-            cliente.setEndereco(endereco); 
+                cliente.setEndereco(endereco); 
+            } else {
+                cliente.setEndereco(null); 
+            }
             
         } catch (CepNaoEncontradoException e) {
             throw new CepNaoEncontradoException("CEP não encontrado: " + dto.getCep());
@@ -87,20 +93,26 @@ public class ClienteService {
         cliente.setEmail(dto.getEmail());
 
         try {
-            EnderecoViaCepDTO enderecoDTO = viaCepService.consultarCep(dto.getCep());
+            String cep = dto.getCep();
+
+            if (cep != null && !cep.isBlank()) {
+                EnderecoViaCepDTO enderecoDTO = viaCepService.consultarCep(cep);
             
-            Endereco endereco = cliente.getEndereco(); 
-            if (endereco == null) {
-                endereco = new Endereco(); 
+                Endereco endereco = cliente.getEndereco(); 
+                if (endereco == null) {
+                    endereco = new Endereco(); 
+                }
+            
+                endereco.setLogradouro(enderecoDTO.getLogradouro());
+                endereco.setBairro(enderecoDTO.getBairro());
+                endereco.setLocalidade(enderecoDTO.getLocalidade());
+                endereco.setUf(enderecoDTO.getUf());
+                endereco.setCep(cep); 
+            
+                cliente.setEndereco(endereco); 
+            } else {
+                cliente.setEndereco(null); 
             }
-            
-            endereco.setLogradouro(enderecoDTO.getLogradouro());
-            endereco.setBairro(enderecoDTO.getBairro());
-            endereco.setLocalidade(enderecoDTO.getLocalidade());
-            endereco.setUf(enderecoDTO.getUf());
-            endereco.setCep(dto.getCep()); 
-            
-            cliente.setEndereco(endereco); 
             
         } catch (CepNaoEncontradoException e) {
             throw new CepNaoEncontradoException("CEP não encontrado: " + dto.getCep());
