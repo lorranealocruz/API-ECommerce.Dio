@@ -1,4 +1,4 @@
-package br.com.ecommerce.api_ecommerce.controller.exceptions;
+package br.com.ecommerce.api_ecommerce.exception;
 
 import java.io.Serializable;
 import java.time.Instant;

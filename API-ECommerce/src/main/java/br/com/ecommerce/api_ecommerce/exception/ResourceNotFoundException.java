@@ -1,4 +1,4 @@
-package br.com.ecommerce.api_ecommerce.service.exceptions;
+package br.com.ecommerce.api_ecommerce.exception;
 
 public class ResourceNotFoundException extends RuntimeException {
 	private static final long serialVersionUID = 1L;

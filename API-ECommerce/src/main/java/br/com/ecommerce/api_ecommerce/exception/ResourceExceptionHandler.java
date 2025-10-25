@@ -1,4 +1,4 @@
-package br.com.ecommerce.api_ecommerce.controller.exceptions;
+package br.com.ecommerce.api_ecommerce.exception;
 
 import java.time.Instant;
 
@@ -11,8 +11,6 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
-import br.com.ecommerce.api_ecommerce.service.exceptions.DatabaseException;
-import br.com.ecommerce.api_ecommerce.service.exceptions.ResourceNotFoundException;
 import jakarta.servlet.http.HttpServletRequest;
 
 @ControllerAdvice

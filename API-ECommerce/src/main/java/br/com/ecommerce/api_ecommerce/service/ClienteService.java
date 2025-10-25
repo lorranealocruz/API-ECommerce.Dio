@@ -11,10 +11,10 @@ import br.com.ecommerce.api_ecommerce.dto.ClienteResponseDTO;
 import br.com.ecommerce.api_ecommerce.dto.EnderecoViaCepDTO;
 import br.com.ecommerce.api_ecommerce.entity.Cliente;
 import br.com.ecommerce.api_ecommerce.entity.Endereco;
+import br.com.ecommerce.api_ecommerce.exception.CepNaoEncontradoException;
 import br.com.ecommerce.api_ecommerce.exception.CpfJaCadastradoException;
 import br.com.ecommerce.api_ecommerce.exception.EmailJaCadastradoException;
-import br.com.ecommerce.api_ecommerce.repository.ClienteRepository;
-import br.com.ecommerce.api_ecommerce.service.exceptions.CepNaoEncontradoException; 
+import br.com.ecommerce.api_ecommerce.repository.ClienteRepository; 
 
 @Service
 public class ClienteService {

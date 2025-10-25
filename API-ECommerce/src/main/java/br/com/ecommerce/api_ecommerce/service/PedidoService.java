@@ -18,10 +18,10 @@ import br.com.ecommerce.api_ecommerce.dto.ItemPedidoDTO;
 import br.com.ecommerce.api_ecommerce.dto.PedidoCompletoDTO;
 import br.com.ecommerce.api_ecommerce.dto.PedidoInsertDTO;
 import br.com.ecommerce.api_ecommerce.entity.Cliente;
+import br.com.ecommerce.api_ecommerce.exception.ProdutoSemEstoqueException;
 import br.com.ecommerce.api_ecommerce.repository.ClienteRepository;
 import br.com.ecommerce.api_ecommerce.repository.PedidoRepository;
 import br.com.ecommerce.api_ecommerce.repository.ProdutoRepository;
-import br.com.ecommerce.api_ecommerce.service.exceptions.ProdutoSemEstoqueException;
 
 @Service
 public class PedidoService {
