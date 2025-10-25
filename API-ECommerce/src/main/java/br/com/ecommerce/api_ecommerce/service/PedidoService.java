@@ -1,6 +1,5 @@
 package br.com.ecommerce.api_ecommerce.service;
 
-
 import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.List;
@@ -37,10 +36,10 @@ public class PedidoService {
     private ProdutoRepository produtoRepository;
 
 
-    public List<PedidoCompletoDTO> listarTodos () {
-    	List<Pedido> pedidos = pedidoRepository.findAll();
-    	
-    	return pedidos.stream()
+    public List<PedidoCompletoDTO> listarTodos() {
+        List<Pedido> pedidos = pedidoRepository.findAll();
+
+        return pedidos.stream()
                 .map(p -> {
                     PedidoCompletoDTO dto = toDTO(p);
 
@@ -53,7 +52,8 @@ public class PedidoService {
                 })
                 .collect(Collectors.toList());
     }
-    
+
+
     @Transactional
     public PedidoCompletoDTO inserir(PedidoInsertDTO pddDTO) {
         Cliente cliente = clienteRepository.findById(pddDTO.getClienteId())
@@ -62,8 +62,9 @@ public class PedidoService {
         Pedido pedido = new Pedido();
         pedido.setCliente(cliente);
         pedido.setStatus(StatusPedido.AGUARDANDO_PAGAMENTO);
+        pedido.setDataPedido(LocalDate.now());
 
-        HashSet<ItemPedido> itens = new HashSet<ItemPedido>();
+        HashSet<ItemPedido> itens = new HashSet<>();
 
         for (ItemInsertDTO itemDTO : pddDTO.getItens()) {
             Produto produto = produtoRepository.findById(itemDTO.getProduto().getId())
@@ -74,11 +75,11 @@ public class PedidoService {
             }
 
             ItemPedido item = new ItemPedido(
-                pedido,                          
-                produto,                           
-                produto.getPreco(),                 
-                itemDTO.getDesconto(),             
-                itemDTO.getQuantidade()
+                    pedido,
+                    produto,
+                    produto.getPreco(),
+                    itemDTO.getDesconto(),
+                    itemDTO.getQuantidade()
             );
 
             itens.add(item);
@@ -87,24 +88,21 @@ public class PedidoService {
             produto.setEstoque(produto.getEstoque() - itemDTO.getQuantidade());
             produtoRepository.save(produto);
         }
-        
-        Double total = itens.stream()
-        	    .mapToDouble(i -> (i.getValorVenda() * i.getQuantidade()) - i.getDesconto())
-        	    .sum();
 
-        	pedido.setItens(itens);
-        	pedido.setDataPedido(LocalDate.now());
-        	pedido.setValorTotal(total);
-        	pedidoRepository.save(pedido);
 
+        double total = itens.stream()
+                .mapToDouble(i -> (i.getValorVenda() * i.getQuantidade()) - i.getDesconto())
+                .sum();
 
         pedido.setItens(itens);
-        pedido.setDataPedido(LocalDate.now());
-        pedido.setValorVenda(total);
+        pedido.setValorTotal(total);
+
+
         pedidoRepository.save(pedido);
 
         return toDTO(pedido);
     }
+
 
     public PedidoCompletoDTO listarPorNumero(Long id) {
         Pedido pedido = pedidoRepository.findById(id)
@@ -119,6 +117,7 @@ public class PedidoService {
         return dto;
     }
 
+
     public PedidoCompletoDTO alterarStatus(Long id, String statusStr) {
         Pedido pedido = pedidoRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Pedido não encontrado"));
@@ -130,10 +129,17 @@ public class PedidoService {
             throw new IllegalArgumentException("Status inválido: " + statusStr);
         }
 
-        pedido.setDataPedido(LocalDate.now());
         pedidoRepository.save(pedido);
         return toDTO(pedido);
     }
+
+
+    public void deletar(Long id) {
+        Pedido pedido = pedidoRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Pedido não encontrado"));
+        pedidoRepository.delete(pedido);
+    }
+
 
     private PedidoCompletoDTO toDTO(Pedido pedido) {
         PedidoCompletoDTO dto = new PedidoCompletoDTO();
@@ -154,20 +160,13 @@ public class PedidoService {
 
         dto.setItens(itensDTO);
 
-     
-        double total = pedido.getValorTotal() != null ? pedido.getValorTotal()
-            : itensDTO.stream().mapToDouble(ItemPedidoDTO::getSubtotal).sum();
-        dto.setTotal(total);
+        double total = pedido.getValorTotal() != null
+                ? pedido.getValorTotal()
+                : itensDTO.stream().mapToDouble(ItemPedidoDTO::getSubtotal).sum();
 
+        dto.setTotal(total);
         return dto;
     }
-    
-    public void deletar(Long id) {
-        Pedido pedido = pedidoRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Pedido não encontrado"));
-        
-        pedidoRepository.delete(pedido);
-    }
-
 }
+
 
