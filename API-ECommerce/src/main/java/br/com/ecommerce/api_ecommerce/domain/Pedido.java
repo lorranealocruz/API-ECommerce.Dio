@@ -41,6 +41,9 @@ public class Pedido implements Serializable {
 
 	@Column
 	private Integer quantidade;
+	
+	@Column 
+	private Double ValorTotal;
 
 	@ManyToOne
 	@JoinColumn(name = "id_cliente", nullable = false)
@@ -49,7 +52,7 @@ public class Pedido implements Serializable {
 	@OneToMany(mappedBy = "id.pedido")
 	private Set<ItemPedido> itens = new HashSet<>();
 
-	// Getters e Setters
+
 	public Long getId() {
 		return id;
 	}
@@ -96,6 +99,14 @@ public class Pedido implements Serializable {
 
 	public void setQuantidade(Integer quantidade) {
 		this.quantidade = quantidade;
+	}
+	
+	public Double getValorTotal() {
+		return ValorTotal;
+	}
+	
+	public void setValorTotal(Double ValorTotal) {
+		this.ValorTotal = ValorTotal;
 	}
 
 	public Cliente getCliente() {
