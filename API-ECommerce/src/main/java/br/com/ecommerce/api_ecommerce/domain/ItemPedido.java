@@ -29,7 +29,6 @@ public class ItemPedido implements Serializable {
 		this.quantidade = quantidade;
 	}
 
-	// Getters e Setters
 
 	public ItemPedidoPK getId() {
 		return id;
@@ -71,7 +70,6 @@ public class ItemPedido implements Serializable {
 		this.quantidade = quantidade;
 	}
 
-	// Total de cada item (opcional, mas útil)
 	public Double getSubTotal() {
 		return (valorVenda - desconto) * quantidade;
 	}
