@@ -6,6 +6,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import br.com.ecommerce.api_ecommerce.entity.Cliente;
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -49,7 +50,7 @@ public class Pedido implements Serializable {
 	@JoinColumn(name = "id_cliente", nullable = false)
 	private Cliente cliente;
 
-	@OneToMany(mappedBy = "id.pedido")
+	@OneToMany(mappedBy = "id.pedido", cascade = CascadeType.ALL, orphanRemoval = true)
 	private Set<ItemPedido> itens = new HashSet<>();
 
 

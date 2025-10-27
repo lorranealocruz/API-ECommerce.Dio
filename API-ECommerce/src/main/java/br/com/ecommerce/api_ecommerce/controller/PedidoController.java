@@ -11,12 +11,13 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import br.com.ecommerce.api_ecommerce.dto.PedidoCompletoDTO;
 import br.com.ecommerce.api_ecommerce.dto.PedidoInsertDTO;
+import br.com.ecommerce.api_ecommerce.dto.StatusPedidoDTO;
 import br.com.ecommerce.api_ecommerce.service.PedidoService;
+
 
 
 @RestController
@@ -25,6 +26,16 @@ public class PedidoController {
 	
 	@Autowired
 	private PedidoService pedidoService;
+	
+	
+	//paginacao
+	@GetMapping("/clientes-nomes")
+	public ResponseEntity<List<String>> listarNomesClientes() {
+	    List<String> nomes = pedidoService.listarNomesClientes();
+	    return ResponseEntity.ok(nomes);
+	}
+
+
 	
 	@GetMapping
 	public ResponseEntity<List<PedidoCompletoDTO>> listarTodos() {
@@ -45,10 +56,11 @@ public class PedidoController {
 	
 	@PutMapping("/{id}/status") 
 	public ResponseEntity<PedidoCompletoDTO> alterarStatus(
-			@PathVariable Long id,
-			@RequestParam String status) {
-		return ResponseEntity.ok(pedidoService.alterarStatus(id, status));
+	        @PathVariable Long id,
+	        @RequestBody StatusPedidoDTO dto) {
+	    return ResponseEntity.ok(pedidoService.alterarStatus(id, dto.getStatus()));
 	}
+
 	
 	@DeleteMapping("/{id}")
 	public ResponseEntity<Void> deletar(@PathVariable Long id) {

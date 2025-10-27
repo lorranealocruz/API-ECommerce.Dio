@@ -4,7 +4,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
 import br.com.ecommerce.api_ecommerce.dto.EnderecoViaCepDTO;
-import br.com.ecommerce.api_ecommerce.service.exceptions.CepNaoEncontradoException;
+import br.com.ecommerce.api_ecommerce.exception.CepNaoEncontradoException;
 
 @Service
 public class ViaCepService {

@@ -1,4 +1,4 @@
-package br.com.ecommerce.api_ecommerce.service.exceptions;
+package br.com.ecommerce.api_ecommerce.exception;
 
 public class PedidoNaoEncontradoException extends RuntimeException {
 	
