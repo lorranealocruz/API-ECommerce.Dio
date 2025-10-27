@@ -7,7 +7,7 @@ import jakarta.validation.constraints.Email;
 import org.hibernate.validator.constraints.br.CPF;
 
 @Entity
-@Table(name = "tb_cliente")
+@Table(name = "cliente")
 public class Cliente {
 
     @Id
