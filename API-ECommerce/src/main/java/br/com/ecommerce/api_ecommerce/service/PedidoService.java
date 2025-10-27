@@ -168,6 +168,22 @@ public class PedidoService {
         return dto;
     }
     
+    //paginacao
+    public List<String> listarNomesClientes() {
+        System.out.println(">>> Entrou no método listarNomesClientes()");
+
+        return pedidoRepository.findAll()
+                .stream()
+                .map(p -> {
+                    if (p.getCliente() == null) {
+                        System.out.println("⚠ Pedido sem cliente: ID " + p.getId());
+                        return "Cliente não informado (Pedido ID: " + p.getId() + ")";
+                    }
+                    return p.getCliente().getNome();
+                })
+                .distinct()
+                .collect(Collectors.toList());
+    }
 
 }
 

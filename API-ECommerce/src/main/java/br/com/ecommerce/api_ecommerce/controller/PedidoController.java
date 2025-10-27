@@ -19,12 +19,23 @@ import br.com.ecommerce.api_ecommerce.dto.StatusPedidoDTO;
 import br.com.ecommerce.api_ecommerce.service.PedidoService;
 
 
+
 @RestController
 @RequestMapping("/pedidos")
 public class PedidoController {
 	
 	@Autowired
 	private PedidoService pedidoService;
+	
+	
+	//paginacao
+	@GetMapping("/clientes-nomes")
+	public ResponseEntity<List<String>> listarNomesClientes() {
+	    List<String> nomes = pedidoService.listarNomesClientes();
+	    return ResponseEntity.ok(nomes);
+	}
+
+
 	
 	@GetMapping
 	public ResponseEntity<List<PedidoCompletoDTO>> listarTodos() {
