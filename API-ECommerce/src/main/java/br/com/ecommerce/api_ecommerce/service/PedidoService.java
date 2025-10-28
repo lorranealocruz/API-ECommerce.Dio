@@ -67,12 +67,9 @@ public class PedidoService {
         HashSet<ItemPedido> itens = new HashSet<>();
 
         for (ItemInsertDTO itemDTO : pddDTO.getItens()) {
-            Produto produto = produtoRepository.findById(itemDTO.getProduto().getId())
-                    .orElseThrow(() -> new RuntimeException("Produto não encontrado"));
-
-            if (produto.getEstoque() < itemDTO.getQuantidade()) {
-                throw new ProdutoSemEstoqueException("Estoque insuficiente para: " + produto.getNome());
-            }
+            
+            Produto produto = produtoRepository.findById(itemDTO.getIdProduto())
+                            .orElseThrow(() -> new RuntimeException("Produto não encontrado"));
 
             ItemPedido item = new ItemPedido(
                     pedido,

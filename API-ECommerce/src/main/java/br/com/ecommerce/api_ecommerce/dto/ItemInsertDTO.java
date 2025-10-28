@@ -1,27 +1,29 @@
 package br.com.ecommerce.api_ecommerce.dto;
 
-import br.com.ecommerce.api_ecommerce.domain.Pedido;
-import br.com.ecommerce.api_ecommerce.domain.Produto;
-
 public class ItemInsertDTO {
 
-	private Double valorVenda;
-	private Double desconto;
-	private Integer quantidade;
-	private Produto produto;
-	private Pedido pedido;
+    private Double valorVenda;
+    private Double desconto;
+    private Integer quantidade;
+    private Long idProduto; 
 
-	public ItemInsertDTO() {
-	}
+    public ItemInsertDTO() {
+    }
 
-	public ItemInsertDTO(Double valorVenda, Double desconto, Integer quantidade, Produto produto, Pedido pedido) {
-		super();
-		this.valorVenda = valorVenda;
-		this.desconto = desconto;
-		this.quantidade = quantidade;
-		this.produto = produto;
-		this.pedido = pedido;
-	}
+    public ItemInsertDTO(Double valorVenda, Double desconto, Integer quantidade, Long idProduto) {
+        this.valorVenda = valorVenda;
+        this.desconto = desconto;
+        this.quantidade = quantidade;
+        this.idProduto = idProduto;
+    }
+
+    public Long getIdProduto() {
+        return idProduto;
+    }
+
+    public void setIdProduto(Long idProduto) {
+        this.idProduto = idProduto;
+    }
 
 	public Double getValorVenda() {
 		return valorVenda;
@@ -46,20 +48,6 @@ public class ItemInsertDTO {
 	public void setQuantidade(Integer quantidade) {
 		this.quantidade = quantidade;
 	}
-
-	public Produto getProduto() {
-		return produto;
-	}
-
-	public void setProduto(Produto produto) {
-		this.produto = produto;
-	}
-
-	public Pedido getPedido() {
-		return pedido;
-	}
-
-	public void setPedido(Pedido pedido) {
-		this.pedido = pedido;
-	}
+    
+    
 }

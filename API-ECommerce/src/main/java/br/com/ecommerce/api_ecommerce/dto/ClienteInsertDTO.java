@@ -25,6 +25,9 @@ public class ClienteInsertDTO {
     @NotBlank
     @Pattern(regexp = "\\d{8}", message = "O CEP deve conter 8 dígitos, sem traço")
     private String cep;
+    
+    @NotBlank(message = "A senha é obrigatória")
+    private String senha;
 
     public String getCep() {
         return cep;
@@ -66,4 +69,12 @@ public class ClienteInsertDTO {
     public void setCpf(String cpf) {
         this.cpf = cpf;
     }
+    
+    public String getSenha() {
+		return senha;
+	}
+
+	public void setSenha(String senha) {
+		this.senha = senha;
+	}
 }

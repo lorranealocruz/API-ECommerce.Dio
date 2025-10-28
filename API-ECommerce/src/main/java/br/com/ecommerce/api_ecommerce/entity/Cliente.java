@@ -1,14 +1,21 @@
 package br.com.ecommerce.api_ecommerce.entity;
 
+import br.com.ecommerce.api_ecommerce.domain.RoleEnum;
 import br.com.ecommerce.api_ecommerce.dto.ClienteInsertDTO;
 import jakarta.persistence.*;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Email;
+
+import java.util.Collection;
+import java.util.List;
+
 import org.hibernate.validator.constraints.br.CPF;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
 @Entity
 @Table(name = "cliente")
-public class Cliente {
+public class Cliente implements UserDetails {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -19,10 +26,14 @@ public class Cliente {
     private String telefone;
 
     @Email
+    @Column(unique = true)
     private String email;
 
     @CPF
+    @Column(unique = true)
     private String cpf;
+    
+    private String senha;
 
     @Valid
     @Embedded
@@ -35,8 +46,11 @@ public class Cliente {
     public void setEndereco(Endereco endereco) {
         this.endereco = endereco;
     }
+    
+    @Enumerated(EnumType.STRING)
+    private RoleEnum role = RoleEnum.CLIENTE;
 
-    // Construtor padrão (obrigatório pelo JPA)
+
     public Cliente() {}
 
     public Cliente(ClienteInsertDTO dto) {
@@ -46,8 +60,7 @@ public class Cliente {
         this.cpf = dto.getCpf();
     }
 
-
-    public Long getId() {
+	public Long getId() {
         return id;
     }
 
@@ -86,4 +99,59 @@ public class Cliente {
     public void setCpf(String cpf) {
         this.cpf = cpf;
     }
+
+	public String getSenha() {
+		return senha;
+	}
+
+	public void setSenha(String senha) {
+		this.senha = senha;
+	}
+
+	public RoleEnum getRole() {
+        return role;
+    }
+
+    public void setRole(RoleEnum role) {
+        this.role = role;
+    }
+	
+	@Override
+    public boolean isAccountNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isAccountNonLocked() {
+        return true;
+    }
+
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return true;
+    }
+
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+
+        if (this.role == null) {
+            return List.of();
+        }
+        return List.of(this.role);
+    }
+
+	@Override
+	public String getPassword() {
+		return this.senha;
+	}
+
+	@Override
+	public String getUsername() {
+		return this.email;
+	}
 }

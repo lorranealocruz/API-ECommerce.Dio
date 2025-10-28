@@ -2,6 +2,7 @@ package br.com.ecommerce.api_ecommerce.service;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import br.com.ecommerce.api_ecommerce.dto.ClienteInsertDTO;
@@ -25,8 +26,12 @@ public class ClienteService {
 
     @Autowired
     private EmailService emailService;
+    
+    @Autowired
+    private BCryptPasswordEncoder passwordEncoder;
 
     public ClienteResponseDTO inserir(ClienteInsertDTO dto) {
+
         if (repository.existsByCpf(dto.getCpf())) {
             throw new CpfJaCadastradoException("CPF já cadastrado!");
         }
@@ -35,36 +40,41 @@ public class ClienteService {
             throw new EmailJaCadastradoException("E-mail já cadastrado!");
         }
 
+        if (dto.getSenha() == null || dto.getSenha().length() < 4) {
+            throw new IllegalArgumentException("A senha deve ter pelo menos 4 caracteres.");
+        }
+
         Cliente cliente = new Cliente(dto);
+        cliente.setSenha(passwordEncoder.encode(dto.getSenha()));
 
         try {
             String cep = dto.getCep();
 
             if (cep != null && !cep.isBlank()) {
                 EnderecoViaCepDTO enderecoDTO = viaCepService.consultarCep(cep);
-            
-                Endereco endereco = new Endereco(); 
+
+                Endereco endereco = new Endereco();
                 endereco.setLogradouro(enderecoDTO.getLogradouro());
                 endereco.setBairro(enderecoDTO.getBairro());
                 endereco.setLocalidade(enderecoDTO.getLocalidade());
                 endereco.setUf(enderecoDTO.getUf());
-                endereco.setCep(cep); 
-            
-                cliente.setEndereco(endereco); 
+                endereco.setCep(cep);
+
+                cliente.setEndereco(endereco);
             } else {
-                cliente.setEndereco(null); 
+                cliente.setEndereco(null);
             }
-            
+
         } catch (CepNaoEncontradoException e) {
             throw new CepNaoEncontradoException("CEP não encontrado: " + dto.getCep());
         }
 
         repository.save(cliente);
-        
         emailService.enviarEmailDeConfirmacao(cliente.getEmail(), cliente.getNome());
 
         return new ClienteResponseDTO(cliente);
     }
+
 
     public List<ClienteResponseDTO> listar() {
         List<Cliente> clientes = repository.findAll();
@@ -89,6 +99,10 @@ public class ClienteService {
         cliente.setCpf(dto.getCpf());
         cliente.setTelefone(dto.getTelefone());
         cliente.setEmail(dto.getEmail());
+        
+        if (dto.getSenha() != null && !dto.getSenha().isEmpty()) {
+            cliente.setSenha(passwordEncoder.encode(dto.getSenha()));
+        }
 
         try {
             String cep = dto.getCep();
@@ -128,7 +142,4 @@ public class ClienteService {
                 .orElseThrow(() -> new RuntimeException("Cliente não encontrado"));
         repository.delete(cliente);
     }
-    
-    
-    
 }
