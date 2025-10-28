@@ -1,4 +1,4 @@
-package br.com.ecommerce.api_ecommerce.controller.exceptions;
+package br.com.ecommerce.api_ecommerce.exception;
 
 import java.util.ArrayList;
 import java.util.List;

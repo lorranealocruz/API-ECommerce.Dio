@@ -2,7 +2,7 @@ package br.com.ecommerce.api_ecommerce.domain;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 
-import br.com.ecommerce.api_ecommerce.service.exceptions.EnumValidationException;
+import br.com.ecommerce.api_ecommerce.exception.EnumValidationException;
 
 public enum StatusPedido {
 

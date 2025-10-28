@@ -1,8 +1,6 @@
 package br.com.ecommerce.api_ecommerce.service;
-
 import java.util.List;
 import java.util.stream.Collectors;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -11,10 +9,10 @@ import br.com.ecommerce.api_ecommerce.dto.ClienteResponseDTO;
 import br.com.ecommerce.api_ecommerce.dto.EnderecoViaCepDTO;
 import br.com.ecommerce.api_ecommerce.entity.Cliente;
 import br.com.ecommerce.api_ecommerce.entity.Endereco;
+import br.com.ecommerce.api_ecommerce.exception.CepNaoEncontradoException;
 import br.com.ecommerce.api_ecommerce.exception.CpfJaCadastradoException;
 import br.com.ecommerce.api_ecommerce.exception.EmailJaCadastradoException;
-import br.com.ecommerce.api_ecommerce.repository.ClienteRepository;
-import br.com.ecommerce.api_ecommerce.service.exceptions.CepNaoEncontradoException; 
+import br.com.ecommerce.api_ecommerce.repository.ClienteRepository; 
 
 @Service
 public class ClienteService {
@@ -40,16 +38,22 @@ public class ClienteService {
         Cliente cliente = new Cliente(dto);
 
         try {
-            EnderecoViaCepDTO enderecoDTO = viaCepService.consultarCep(dto.getCep());
+            String cep = dto.getCep();
+
+            if (cep != null && !cep.isBlank()) {
+                EnderecoViaCepDTO enderecoDTO = viaCepService.consultarCep(cep);
             
-            Endereco endereco = new Endereco(); 
-            endereco.setLogradouro(enderecoDTO.getLogradouro());
-            endereco.setBairro(enderecoDTO.getBairro());
-            endereco.setLocalidade(enderecoDTO.getLocalidade());
-            endereco.setUf(enderecoDTO.getUf());
-            endereco.setCep(dto.getCep()); 
+                Endereco endereco = new Endereco(); 
+                endereco.setLogradouro(enderecoDTO.getLogradouro());
+                endereco.setBairro(enderecoDTO.getBairro());
+                endereco.setLocalidade(enderecoDTO.getLocalidade());
+                endereco.setUf(enderecoDTO.getUf());
+                endereco.setCep(cep); 
             
-            cliente.setEndereco(endereco); 
+                cliente.setEndereco(endereco); 
+            } else {
+                cliente.setEndereco(null); 
+            }
             
         } catch (CepNaoEncontradoException e) {
             throw new CepNaoEncontradoException("CEP não encontrado: " + dto.getCep());
@@ -87,20 +91,26 @@ public class ClienteService {
         cliente.setEmail(dto.getEmail());
 
         try {
-            EnderecoViaCepDTO enderecoDTO = viaCepService.consultarCep(dto.getCep());
+            String cep = dto.getCep();
+
+            if (cep != null && !cep.isBlank()) {
+                EnderecoViaCepDTO enderecoDTO = viaCepService.consultarCep(cep);
             
-            Endereco endereco = cliente.getEndereco(); 
-            if (endereco == null) {
-                endereco = new Endereco(); 
+                Endereco endereco = cliente.getEndereco(); 
+                if (endereco == null) {
+                    endereco = new Endereco(); 
+                }
+            
+                endereco.setLogradouro(enderecoDTO.getLogradouro());
+                endereco.setBairro(enderecoDTO.getBairro());
+                endereco.setLocalidade(enderecoDTO.getLocalidade());
+                endereco.setUf(enderecoDTO.getUf());
+                endereco.setCep(cep); 
+            
+                cliente.setEndereco(endereco); 
+            } else {
+                cliente.setEndereco(null); 
             }
-            
-            endereco.setLogradouro(enderecoDTO.getLogradouro());
-            endereco.setBairro(enderecoDTO.getBairro());
-            endereco.setLocalidade(enderecoDTO.getLocalidade());
-            endereco.setUf(enderecoDTO.getUf());
-            endereco.setCep(dto.getCep()); 
-            
-            cliente.setEndereco(endereco); 
             
         } catch (CepNaoEncontradoException e) {
             throw new CepNaoEncontradoException("CEP não encontrado: " + dto.getCep());
@@ -118,4 +128,7 @@ public class ClienteService {
                 .orElseThrow(() -> new RuntimeException("Cliente não encontrado"));
         repository.delete(cliente);
     }
+    
+    
+    
 }

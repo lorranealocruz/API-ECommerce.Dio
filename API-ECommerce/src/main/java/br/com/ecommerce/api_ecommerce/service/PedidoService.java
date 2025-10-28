@@ -18,10 +18,10 @@ import br.com.ecommerce.api_ecommerce.dto.ItemPedidoDTO;
 import br.com.ecommerce.api_ecommerce.dto.PedidoCompletoDTO;
 import br.com.ecommerce.api_ecommerce.dto.PedidoInsertDTO;
 import br.com.ecommerce.api_ecommerce.entity.Cliente;
+import br.com.ecommerce.api_ecommerce.exception.ProdutoSemEstoqueException;
 import br.com.ecommerce.api_ecommerce.repository.ClienteRepository;
 import br.com.ecommerce.api_ecommerce.repository.PedidoRepository;
 import br.com.ecommerce.api_ecommerce.repository.ProdutoRepository;
-import br.com.ecommerce.api_ecommerce.service.exceptions.ProdutoSemEstoqueException;
 
 @Service
 public class PedidoService {
@@ -167,6 +167,24 @@ public class PedidoService {
         dto.setTotal(total);
         return dto;
     }
+    
+    //paginacao
+    public List<String> listarNomesClientes() {
+        System.out.println(">>> Entrou no método listarNomesClientes()");
+
+        return pedidoRepository.findAll()
+                .stream()
+                .map(p -> {
+                    if (p.getCliente() == null) {
+                        System.out.println("⚠ Pedido sem cliente: ID " + p.getId());
+                        return "Cliente não informado (Pedido ID: " + p.getId() + ")";
+                    }
+                    return p.getCliente().getNome();
+                })
+                .distinct()
+                .collect(Collectors.toList());
+    }
+
 }
 
 
