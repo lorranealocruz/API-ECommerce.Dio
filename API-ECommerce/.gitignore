@@ -31,3 +31,6 @@ build/
 
 ### VS Code ###
 .vscode/
+
+## Diretório padrão do H2 ##
+/h2/
