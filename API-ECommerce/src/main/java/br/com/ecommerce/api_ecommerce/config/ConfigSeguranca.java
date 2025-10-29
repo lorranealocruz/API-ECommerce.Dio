@@ -44,43 +44,44 @@ public class ConfigSeguranca {
 	@Bean
 	public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 
-		AuthenticationManager authManager = authenticationManager(http.getSharedObject(AuthenticationConfiguration.class));
-		JwtAuthenticationFilter jwtAuthenticationFilter = 
-				new JwtAuthenticationFilter(authManager, jwtUtil);
-		jwtAuthenticationFilter.setFilterProcessesUrl("/login");
-		JwtAuthorizationFilter jwtAuthorizationFIlter = 
-				new JwtAuthorizationFilter(authManager, jwtUtil, userDetailsService);
+	    AuthenticationManager authManager = authenticationManager(
+	        http.getSharedObject(AuthenticationConfiguration.class)
+	    );
 
-		http.csrf(csrf -> csrf.disable())
-		.headers(headers -> headers.frameOptions().disable())
-		.cors((cors) -> cors.configurationSource(corsConfigurationSource()))
-		.authorizeHttpRequests(authorize -> 
-	        authorize
-	        	.requestMatchers("/h2-console/**").permitAll()
-	        	.requestMatchers(HttpMethod.POST, "/clientes").permitAll()
+	    JwtAuthenticationFilter jwtAuthenticationFilter = 
+	        new JwtAuthenticationFilter(authManager, jwtUtil);
+	    jwtAuthenticationFilter.setFilterProcessesUrl("/login");
+
+	    JwtAuthorizationFilter jwtAuthorizationFilter = 
+	        new JwtAuthorizationFilter(authManager, jwtUtil, userDetailsService);
+
+	    http.csrf(csrf -> csrf.disable())
+	        .headers(headers -> headers.frameOptions().disable())
+	        .cors(cors -> cors.configurationSource(corsConfigurationSource()))
+	        .authorizeHttpRequests(authorize -> authorize
+	            .requestMatchers("/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html").permitAll()
+	            .requestMatchers("/h2-console/**").permitAll()
+	            .requestMatchers(HttpMethod.POST, "/clientes").permitAll()
 	            .requestMatchers(HttpMethod.POST, "/login").permitAll()
 	            .requestMatchers(HttpMethod.GET, "/categorias/**", "/produtos/**").permitAll()
 	            .requestMatchers(HttpMethod.POST, "/categorias", "/produtos", "/transportadoras").permitAll()
 	            .requestMatchers(HttpMethod.GET, "/pedidos", "/clientes").permitAll()
 	            .requestMatchers(HttpMethod.GET, "/relatorios", "/transportadoras", "/transportadoras/{id}").permitAll()
-	            .requestMatchers(HttpMethod.PUT, "/transportadoras/{id}\"").permitAll()
-	            .requestMatchers(HttpMethod.DELETE, "/transportadoras/{id}\"").permitAll()
-	            
-	            .requestMatchers(HttpMethod.PUT, "/pedidos/{id}/status").hasAuthority("ROLE_ADMIN")         
+	            .requestMatchers(HttpMethod.PUT, "/transportadoras/{id}").permitAll()
+	            .requestMatchers(HttpMethod.DELETE, "/transportadoras/{id}").permitAll()
+	            .requestMatchers(HttpMethod.PUT, "/pedidos/{id}/status").hasAuthority("ROLE_ADMIN")
 	            .requestMatchers(HttpMethod.GET, "/pedidos/{id}").hasAuthority("ROLE_CLIENTE")
-	            
 	            .requestMatchers(HttpMethod.POST, "/pedidos").authenticated()
 	            .anyRequest().authenticated()
-	    )
+	        )
+	        .sessionManagement(session -> 
+	            session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+	        );
 
-	    .sessionManagement(session -> 
-	        session.sessionCreationPolicy(SessionCreationPolicy.STATELESS) 
-	    );
-		
-		http.addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
-		http.addFilter(jwtAuthorizationFIlter);
-		
-		return http.build();
+	    http.addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
+	    http.addFilter(jwtAuthorizationFilter);
+
+	    return http.build();
 	}
 
 	@Bean

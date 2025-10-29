@@ -1,6 +1,7 @@
 package br.com.ecommerce.api_ecommerce.dto;
 
 import br.com.ecommerce.api_ecommerce.entity.Cliente;
+import br.com.ecommerce.api_ecommerce.entity.Endereco;
 
 public class ClienteResponseDTO {
 
@@ -9,6 +10,7 @@ public class ClienteResponseDTO {
     private String telefone;
     private String email;
     private String cpf;
+    private Endereco endereco;
 
     public ClienteResponseDTO(Cliente entity) {
         this.id = entity.getId();
@@ -16,9 +18,9 @@ public class ClienteResponseDTO {
         this.telefone = entity.getTelefone();
         this.email = entity.getEmail();
         this.cpf = entity.getCpf();
+        this.endereco = entity.getEndereco();
     }
 
-    // Getters
     public Long getId() {
         return id;
     }
@@ -37,5 +39,9 @@ public class ClienteResponseDTO {
 
     public String getCpf() {
         return cpf;
+    }
+
+    public Endereco getEndereco() {
+        return endereco;
     }
 }

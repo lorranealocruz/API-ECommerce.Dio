@@ -139,6 +139,7 @@ public class ResourceExceptionHandler {
     public ResponseEntity<StandardError> handleGenericException(
             Exception e,
             HttpServletRequest request) {
+
         String error = "Erro interno do servidor";
         HttpStatus status = HttpStatus.INTERNAL_SERVER_ERROR;
         StandardError err = new StandardError();
