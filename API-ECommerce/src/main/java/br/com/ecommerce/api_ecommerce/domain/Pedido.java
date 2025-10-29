@@ -53,8 +53,30 @@ public class Pedido implements Serializable {
 	@OneToMany(mappedBy = "id.pedido", cascade = CascadeType.ALL, orphanRemoval = true)
 	private Set<ItemPedido> itens = new HashSet<>();
 
+    @ManyToOne
+    @JoinColumn(name = "id_cupom_aplicado", nullable = true)
+    private Cupom cupomAplicado;
 
-	public Long getId() {
+    private Double valorDescontoTotal = 0.0;
+
+
+	public Cupom getCupomAplicado() {
+        return cupomAplicado;
+    }
+
+    public void setCupomAplicado(Cupom cupomAplicado) {
+        this.cupomAplicado = cupomAplicado;
+    }
+
+    public Double getValorDescontoTotal() {
+        return valorDescontoTotal;
+    }
+
+    public void setValorDescontoTotal(Double valorDescontoTotal) {
+        this.valorDescontoTotal = valorDescontoTotal;
+    }
+
+    public Long getId() {
 		return id;
 	}
 

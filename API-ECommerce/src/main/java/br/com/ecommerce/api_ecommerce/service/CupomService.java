@@ -1,5 +1,6 @@
 package br.com.ecommerce.api_ecommerce.service;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -77,5 +78,25 @@ public class CupomService {
         if (dto.getAtivo() != null) {
             entity.setAtivo(dto.getAtivo());
         }
+    }
+
+    @Transactional(readOnly = true)
+    public Cupom validarECarregarCupom(String codigo) {
+    if (codigo == null || codigo.isBlank()) {
+        return null;
+    }
+
+    Cupom cupom = repository.findByCodigo(codigo)
+            .orElseThrow(() -> new ResourceNotFoundException("Cupom não encontrado com código: " + codigo));
+
+    if (cupom.getAtivo() == null || !cupom.getAtivo()) {
+        throw new BadRequestException("Cupom inativo: " + codigo);
+    }
+
+    if (cupom.getDataValidade() != null && cupom.getDataValidade().isBefore(LocalDate.now())) {
+        throw new BadRequestException("Cupom expirado: " + codigo);
+    }
+
+    return cupom;
     }
 }

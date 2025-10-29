@@ -4,92 +4,94 @@ import java.time.LocalDate;
 import java.util.List;
 
 import br.com.ecommerce.api_ecommerce.domain.StatusPedido;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
 
 public class PedidoCompletoDTO {
 
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Long id;
+    private Long id;
     private String clienteNome;
     private LocalDate dataPedido;
     private StatusPedido status;
     private List<ItemPedidoDTO> itens;
-    private Double Valortotal;
-    
+    private Double valorTotal;
+    private String codigoCupomAplicado;
+    private Double valorDescontoAplicado;
+
     public PedidoCompletoDTO() {}
 
+    public PedidoCompletoDTO(Long id, String clienteNome, LocalDate dataPedido, StatusPedido status,
+            List<ItemPedidoDTO> itens, Double valorTotal, String codigoCupomAplicado, Double valorDescontoAplicado) {
+        super();
+        this.id = id;
+        this.clienteNome = clienteNome;
+        this.dataPedido = dataPedido;
+        this.status = status;
+        this.itens = itens;
+        this.valorTotal = valorTotal;
+        this.codigoCupomAplicado = codigoCupomAplicado;
+        this.valorDescontoAplicado = valorDescontoAplicado;
+    }
 
-	public PedidoCompletoDTO(Long id, String clienteNome, LocalDate dataPedido, StatusPedido status,
-			List<ItemPedidoDTO> itens, Double Valortotal) {
-		super();
-		this.id = id;
-		this.clienteNome = clienteNome;
-		this.dataPedido = dataPedido;
-		this.status = status;
-		this.itens = itens;
-		this.Valortotal = Valortotal;
-	}
+    public Long getId() {
+        return id;
+    }
 
+    public void setId(Long id) {
+        this.id = id;
+    }
 
-	public Long getId() {
-		return id;
-	}
+    public String getClienteNome() {
+        return clienteNome;
+    }
 
+    public void setClienteNome(String clienteNome) {
+        this.clienteNome = clienteNome;
+    }
 
-	public void setId(Long id) {
-		this.id = id;
-	}
+    public LocalDate getDataPedido() {
+        return dataPedido;
+    }
 
+    public void setDataPedido(LocalDate dataPedido) {
+        this.dataPedido = dataPedido;
+    }
 
-	public String getClienteNome() {
-		return clienteNome;
-	}
+    public StatusPedido getStatus() {
+        return status;
+    }
 
+    public void setStatus(StatusPedido status) {
+        this.status = status;
+    }
 
-	public void setClienteNome(String clienteNome) {
-		this.clienteNome = clienteNome;
-	}
+    public List<ItemPedidoDTO> getItens() {
+        return itens;
+    }
 
+    public void setItens(List<ItemPedidoDTO> itens) {
+        this.itens = itens;
+    }
 
-	public LocalDate getDataPedido() {
-		return dataPedido;
-	}
+    public Double getValorTotal() {
+        return valorTotal;
+    }
 
+    public void setValorTotal(Double valorTotal) {
+        this.valorTotal = valorTotal;
+    }
 
-	public void setDataPedido(LocalDate dataPedido) {
-		this.dataPedido = dataPedido;
-	}
+    public String getCodigoCupomAplicado() {
+        return codigoCupomAplicado;
+    }
 
+    public void setCodigoCupomAplicado(String codigoCupomAplicado) {
+        this.codigoCupomAplicado = codigoCupomAplicado;
+    }
 
-	public StatusPedido getStatus() {
-		return status;
-	}
+    public Double getValorDescontoAplicado() {
+        return valorDescontoAplicado;
+    }
 
-
-	public void setStatus(StatusPedido status) {
-		this.status = status;
-	}
-
-
-	public List<ItemPedidoDTO> getItens() {
-		return itens;
-	}
-
-
-	public void setItens(List<ItemPedidoDTO> itens) {
-		this.itens = itens;
-	}
-
-
-	public Double getTotal() {
-		return Valortotal;
-	}
-
-
-	public void setTotal(Double Valortotal) {
-		this.Valortotal = Valortotal;
-	}
+    public void setValorDescontoAplicado(Double valorDescontoAplicado) {
+        this.valorDescontoAplicado = valorDescontoAplicado;
+    }
 }

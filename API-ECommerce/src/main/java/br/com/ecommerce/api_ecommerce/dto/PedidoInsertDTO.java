@@ -7,6 +7,10 @@ public class PedidoInsertDTO {
     private Long clienteId;
     private List<ItemInsertDTO> itens;
 
+    private String codigoCupom;
+
+    
+
     public PedidoInsertDTO() {
     }
 
@@ -29,5 +33,13 @@ public class PedidoInsertDTO {
 
     public void setItens(List<ItemInsertDTO> itens) {
         this.itens = itens;
+    }
+
+    public String getCodigoCupom() {
+        return codigoCupom;
+    }
+
+    public void setCodigoCupom(String codigoCupom) {
+        this.codigoCupom = codigoCupom;
     }
 }
