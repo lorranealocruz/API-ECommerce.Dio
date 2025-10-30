@@ -32,11 +32,13 @@ build/
 ### VS Code ###
 .vscode/
 
-<<<<<<< Updated upstream
+
 ## Diretório padrão do H2 ##
 /h2/
-=======
+
 ### Banco de dados H2 ###
 *.mv.db
 *.trace.db
->>>>>>> Stashed changes
+
+/.metadata/
+
