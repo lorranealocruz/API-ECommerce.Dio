@@ -1,0 +1,5 @@
+.git
+.metadata
+.idea
+.vscode
+*.log
