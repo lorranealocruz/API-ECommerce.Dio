@@ -44,14 +44,6 @@ Console H2:
 ```bash
 http://localhost:8080/h2-console 
 ```
-
-### 🗄️ Banco de dados
-Configuração do H2:
-```bash
-JDBC URL: jdbc:h2:file:/data/h2/banco
-User: sa
-Password: password
-```
 ### 🐳 Docker
 O projeto utiliza Docker Compose para subir a aplicação em container.
 
